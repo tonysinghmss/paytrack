@@ -24,13 +24,14 @@ class MemberManager(models.Manager):
     use_for_related_fields = True
     
     def add_member(self, user, team):
-        pass
+        team.members.add(user)
     
     def remove_member(self, user, team):
-        pass
+        team.members.remove(user)
     
-    def transfer_member(self, user, team):
-        pass
+    def transfer_member(self, user, curr_team, new_team):
+        curr_team.members.remove(user)
+        new_team.members.add(user)
 
 
 class Member(models.Model):
