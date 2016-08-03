@@ -21,7 +21,8 @@ class Team(models.Model):
         return self.team_name
 
 class MemberManager(models.Manager):
-    #Manager for membership of User in a Team
+    use_for_related_fields = True
+    
     def add_member(self, user, team):
         team.members.add(user)
     
@@ -33,7 +34,7 @@ class MemberManager(models.Manager):
         new_team.members.add(user)
 
 
-class Member(models.Model):
+class TeamMember(models.Model):
     team = models.ForeignKey(Team)
     user = models.ForeignKey(User)
     objects = MemberManager()
