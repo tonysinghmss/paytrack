@@ -13,6 +13,9 @@ class User(models.Model):
     member_phone = models.CharField(validators=[phone_regex],blank=True,max_length=15)
     member_name = models.CharField(max_length=50)
     
+    def __unicode__(self):
+        return self.member_name + ' having phone number ending with '+ self.member_phone[-4:]
+    
 class Team(models.Model):
     team_name = models.CharField(max_length=50)
     team_members = models.ManyToManyField(User, through='TeamMember')
