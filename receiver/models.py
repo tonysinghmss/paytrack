@@ -27,10 +27,11 @@ class MemberManager(models.Manager):
     use_for_related_fields = True
     
     def add_member(self, user, team):
-        team.team_members.add(user)
+        self.create(user=user, team=team)
     
     def remove_member(self, user, team):
-        team.team_members.remove(user)
+        tu_entry = self.get(user=user, team=team)
+        tu_entry.delete()
     
     def transfer_member(self, user,team):
         prv_teams = user.team_set.all()
@@ -44,6 +45,8 @@ class TeamMember(models.Model):
     user = models.ForeignKey(User)
     objects = MemberManager()
     
+    def __unicode__(self):
+        return 'Team: '+self.team.name +' User: '+self.user.name
     
     
    
