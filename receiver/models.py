@@ -7,46 +7,44 @@ from django.core.validators import RegexValidator
 #Many-to-Many
 # User and Team through Member
         
-class User(models.Model):    
+class Member(models.Model):    
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', 
                                  message="Phone number must be entered in the format: '+9999999999'. Up to 15 digits allowed.")
-    member_phone = models.CharField(validators=[phone_regex],blank=True,max_length=15)
-    member_name = models.CharField(max_length=50)
+    phone = models.CharField(validators=[phone_regex],blank=True,max_length=15)
+    name = models.CharField(max_length=50)
     
     def __unicode__(self):
-        return self.member_name + ' having phone number ending with '+ self.member_phone[-4:]
+        return self.name + ' having phone number ending with '+ self.phone[-4:]
     
 class Team(models.Model):
-    team_name = models.CharField(max_length=50)
-    team_members = models.ManyToManyField(User, through='TeamMember')
+    name = models.CharField(max_length=50)
+    members = models.ManyToManyField(Member, through='TeamMember')
     
     def __unicode__(self):
-        return self.team_name
+        return self.name
 
 class MemberManager(models.Manager):
     use_for_related_fields = True
     
-    def add_member(self, user, team):
-        self.create(user=user, team=team)
+    def add_member(self, member, team):                
+        self.create(member=member, team=team)
     
-    def remove_member(self, user, team):
-        tu_entry = self.get(user=user, team=team)
+    def remove_member(self, member, team):
+        tu_entry = self.get(member=member, team=team)
         tu_entry.delete()
     
-    def transfer_member(self, user,team):
-        prv_teams = user.team_set.all()
+    def transfer_member(self, member, team):
+        prv_teams = member.team_set.all()
         for prv_team in prv_teams:
-            self.remove_member(user, prv_team)
-        self.add_member(user, team)
+            self.remove_member(member, prv_team)
+        self.add_member(member, team)
 
 
 class TeamMember(models.Model):
     team = models.ForeignKey(Team)
-    user = models.ForeignKey(User)
+    member = models.ForeignKey(Member)
     objects = MemberManager()
     
     def __unicode__(self):
-        return 'Team: '+self.team.name +' User: '+self.user.name
-    
-    
-   
+        return 'Team: '+self.team.name +' User: '+self.member.name
+
