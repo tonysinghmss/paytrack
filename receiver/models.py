@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 #One-to-Many
 #
 #Many-to-Many
-# User and Team through Member
+# Member and Team through TeamMember
         
 class Member(models.Model):    
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', 
