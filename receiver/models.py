@@ -24,6 +24,7 @@ class Team(models.Model):
         return self.name
 
 class MemberManager(models.Manager):
+    #Custom manager for TeamMember model
     use_for_related_fields = True
     
     def add_member(self, member, team):                
@@ -41,10 +42,20 @@ class MemberManager(models.Manager):
 
 
 class TeamMember(models.Model):
+    # Model for mapping Member and Team models
     team = models.ForeignKey(Team)
     member = models.ForeignKey(Member)
     objects = MemberManager()
     
     def __unicode__(self):
         return 'Team: '+self.team.name +' User: '+self.member.name
+    
+class MemberPaymentDetails(models.Model):
+    # Model to store details of Member
+    has_payed = models.BooleanField()
+    pay_dt = models.DateTimeField('payment date')
+    member = models.ForeignKey(Member)
+    
+    def __unicode__(self):
+        return self.member.name + ' Payment status: '+self.has_payed
 
