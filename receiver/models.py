@@ -18,6 +18,7 @@ class Member(models.Model):
     
 class Team(models.Model):
     name = models.CharField(max_length=50)
+    amount = models.DecimalField(max_digits=10,decimal_places=2)
     members = models.ManyToManyField(Member, through='TeamMember')
     
     def __unicode__(self):
@@ -51,11 +52,11 @@ class TeamMember(models.Model):
         return 'Team: '+self.team.name +' User: '+self.member.name
     
 class MemberPaymentDetails(models.Model):
-    # Model to store details of Member
+    # Model to store payment details of Member
     has_payed = models.BooleanField()
     pay_dt = models.DateTimeField('payment date')
     member = models.ForeignKey(Member)
     
     def __unicode__(self):
-        return self.member.name + ' Payment status: '+self.has_payed
+        return 'Member Name: '+self.member.name + ' Payment status: '+str(self.has_payed)
 
